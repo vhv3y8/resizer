@@ -1,0 +1,19 @@
+{
+  "name": "resizer",
+  "manifest_version": 3,
+  "version": "0.1",
+  "description": "helps to resize and change font of selected texts.",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "css": [
+        "style.css"
+      ]
+    }
+  ]
+}
