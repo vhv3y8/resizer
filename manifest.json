@@ -9,10 +9,10 @@
         "<all_urls>"
       ],
       "js": [
-        "content.js"
+        "bundle.js"
       ],
       "css": [
-        "style.css"
+        "global.css"
       ]
     }
   ]

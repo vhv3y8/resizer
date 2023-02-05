@@ -5,12 +5,16 @@
   "main": "content.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "sass": "sass --no-source-map style.scss:style.css"
+    "sass": "sass --no-source-map global.scss:global.css",
+    "build": "vite build && npm run sass"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "sass": "^1.57.1"
+  },
+  "dependencies": {
+    "vite": "^4.1.1"
   }
 }

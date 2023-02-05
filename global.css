@@ -1,0 +1,15 @@
+._extension_resizer_none {
+  display: none !important;
+}
+
+._extension_resizer_rootFilter {
+  filter: brightness(0.9);
+}
+
+._extension_resizer_mouseOver {
+  background-color: aquamarine !important;
+}
+
+._extension_resizer_selected {
+  background-color: darkorange !important;
+}
