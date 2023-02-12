@@ -11,6 +11,13 @@ chrome.runtime.onInstalled.addListener(() => {
   })
 });
 
+chrome.action.onClicked.addListener(() => {
+  console.log("popup clicked.");
+  chrome.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id as number, { mode: "toggle" });
+  })
+});
+
 chrome.runtime.onMessage.addListener((msg, sender) => {
   // console.log(`${sender}: ${msg}`);
   console.dir({ sender, msg });

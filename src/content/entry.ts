@@ -1,4 +1,5 @@
 import "./changeMode";
+import "./handleMessage";
 import { mode, currMode, changeModeTo, elements } from "./changeMode";
 import { option, setOption } from "./storage";
 
