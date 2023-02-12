@@ -1,19 +1,20 @@
-import { mode, currMode, changeModeTo } from "./changeMode";
-import { selectModeBox } from "./initElements";
+import "./changeMode";
+import { mode, currMode, changeModeTo, elements } from "./changeMode";
+import { option, setOption } from "./storage";
 
-export let insertedElements: { [modes in mode]: HTMLElement[] } = {
-  select: [selectModeBox],
-  option: [],
-  none: []
-};
-Object.values(insertedElements).flat(1).forEach(elem => {
+/**
+ *  to run code that gets option from storage
+ */
+import "./storage";
+
+Object.values(elements).flat(1).forEach(elem => {
   elem.classList.add("_extension_resizer_none");
   document.body.append(elem);
 })
 
 document.addEventListener("keydown", (e) => {
-  if (e.ctrlKey && (e.key === "Z" || e.key === "z")) {
-    console.log("Ctrl+Z Pressed.");
+  if (e.ctrlKey && (e.key === "Q" || e.key === "q")) {
+    console.log("Ctrl+Q Pressed.");
     changeModeTo("select");
   }
   if (e.key === "Escape") {
@@ -24,8 +25,8 @@ document.addEventListener("keydown", (e) => {
 
 // //////////////////////////////////////
 
-console.log("hi from resizer!");
-console.log(currMode);
+// console.log("hi from resizer!");
+// console.log(currMode);
 
 // // init show button
 // let showBtn = document.createElement("button");

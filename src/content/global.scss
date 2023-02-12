@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+._extension_resizer_none {
+  display: none !important;
+}
+
+._extension_resizer_rootFilter {
+  filter: brightness(.95);
+  // filter: grayscale(.5) blur(.6px);
+}
+
+._extension_resizer_mouseOver {
+  background-color: #D6EAE8 !important;
+  border: 1px solid gray !important;
+  filter: none !important;
+}
+
+._extension_resizer_selected {
+  background-color: darkorange !important;
+}
