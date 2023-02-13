@@ -22,7 +22,9 @@
       ]
     }
   ],
-  "action": {},
+  "action": {
+    "default_title": "resizer\nClick this button to toggle Run/Exit."
+  },
   "background": {
     "service_worker": "background.js",
     "type": "module"
