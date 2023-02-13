@@ -57,7 +57,7 @@ export function selectLeftClick(e: MouseEvent) {
       console.log("leftClick: currElement is", currElement);
 
       // test
-      applyResize({ fontFamily: "None", fontSize: 3, maxSizeLimit: 17 });
+      applyResize({ fontFamily: "Inconsolata", fontSize: 3, sizeLimit: 19 });
     }
     // currElement.classList.add("selected");
   }

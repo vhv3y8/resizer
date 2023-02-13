@@ -1,3 +1,4 @@
+import { applyOptionText } from "./initElements";
 import { Option } from "./optionMode";
 
 export let option: Option;
@@ -7,6 +8,7 @@ export let option: Option;
   option = db.prevOption as Option;
   console.log("from storage.ts: ", option);
   // set things
+  applyOptionText(option);
 })();
 
 export function setOption(option?: Option): void {

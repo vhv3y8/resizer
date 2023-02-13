@@ -2,9 +2,9 @@ import { Option } from "../content/optionMode";
 
 chrome.runtime.onInstalled.addListener(() => {
   let prevOption: Option = {
-    fontSize: 0,
-    fontFamily: "None",
-    maxSizeLimit: "None"
+    fontSize: 3,
+    sizeLimit: 19,
+    fontFamily: "None"
   }
   chrome.storage.sync.set({
     prevOption
