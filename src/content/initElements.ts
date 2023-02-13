@@ -1,9 +1,10 @@
 import "./initFonts";
+import { Option } from "./optionMode";
 
 export let preventElems: Element[] = [];
 
 export let selectModeBox = parseHtmlString(`<div
-id="selectBox"
+id="_extension_resizer_selectBox"
 style="
   border-radius: 1rem;
   background-color: #f2f2f2;
@@ -34,7 +35,7 @@ style="
   "
 >
   <img 
-    id="img1"
+    id="_extension_resizer_img1"
     style="
       margin-right: 8px;
     "
@@ -52,7 +53,7 @@ style="
   "
 >
   <img 
-    id="img2"
+    id="_extension_resizer_img2"
     style="
       margin-right: 8px;
     "
@@ -70,7 +71,7 @@ style="
   "
 >
   <img 
-    id="img3"
+    id="_extension_resizer_img3"
     style="
       margin-right: 8px;
     "
@@ -88,7 +89,7 @@ style="
   "
 >
   <img 
-    id="img4"
+    id="_extension_resizer_img4"
     style="
       margin-right: 8px;
     "
@@ -97,31 +98,92 @@ style="
   즉시 적용
 </p>
 <p
+  id="_extension_resizer_size"
   style="
     padding-left: .8em;
-    font-size: 1em;
+    font-size: 1.1em;
     margin: 0;
+    font-family: Inconsolata, monospace;
+    line-height: 1.4;
+    background-color: #ccc;
   "
->- font-size: +2px;</p>
+></p>
 <p
+  id="_extension_resizer_sizeLimit"
   style="
     padding-left: .8em;
-    font-size: 1em;
+    font-size: 1.1em;
     margin: 0;
+    font-family: Inconsolata;
+    line-height: 1.4;
+    background-color: #ccc;
   "
->- font size limit: 17px;</p>
+></p>
+<p
+  id="_extension_resizer_family"
+  style="
+    padding-left: .8em;
+    font-size: 1.1em;
+    margin: 0;
+    font-family: Inconsolata, monospace;
+    line-height: 1.4;
+    background-color: #ccc;
+  "
+></p>
 </div>`);
-let imgToSrc: [HTMLImageElement, string][] = [
-  [selectModeBox.querySelector("#img1") as HTMLImageElement, "assets/resizerIconTransparent.png"],
-  [selectModeBox.querySelector("#img2") as HTMLImageElement, "assets/escBig.png"],
-  [selectModeBox.querySelector("#img3") as HTMLImageElement, "assets/leftMouse.png"],
-  [selectModeBox.querySelector("#img4") as HTMLImageElement, "assets/rightMouse.png"]
+let [img1, img2, img3, img4]: HTMLImageElement[] = [
+  selectModeBox.querySelector("#_extension_resizer_img1") as HTMLImageElement,
+  selectModeBox.querySelector("#_extension_resizer_img2") as HTMLImageElement,
+  selectModeBox.querySelector("#_extension_resizer_img3") as HTMLImageElement,
+  selectModeBox.querySelector("#_extension_resizer_img4") as HTMLImageElement
 ];
+let imgToSrc: [HTMLImageElement, string][] = [
+  [img1, "assets/resizerIconTransparent.png"],
+  [img2, "assets/escBig.png"],
+  [img3, "assets/leftMouse.png"],
+  [img4, "assets/rightMouse.png"]
+];
+
+export function applyOptionText(option: Option) {
+  let size = document.getElementById("_extension_resizer_size") as HTMLElement;
+  let limit = document.getElementById("_extension_resizer_sizeLimit") as HTMLElement;
+  let family = document.getElementById("_extension_resizer_family") as HTMLElement;
+
+  size.classList.remove("._extension_resizer_none");
+  limit.classList.remove("._extension_resizer_none");
+  family.classList.remove("._extension_resizer_none");
+
+  size.textContent = "font-size: ";
+  if (option.fontSize === 0) {
+    size.textContent += "0";
+  } else if (option.fontSize < 0) {
+    size.textContent += option.fontSize;
+  } else {
+    size.textContent += "+" + option.fontSize;
+  }
+  size.textContent += "px;";
+
+  if (option.sizeLimit === "None") {
+    console.log("sizeLimit is None.");
+    limit.classList.add("._extension_resizer_none");
+  } else {
+    limit.textContent = `font-size limit: ${option.sizeLimit}px`;
+  }
+
+  if (option.fontFamily === "None") {
+    console.log("fontFamily is None.");
+    family.classList.add("._extension_resizer_none");
+  } else {
+    family.textContent = `font-family: ${option.fontFamily}`;
+  }
+}
 imgToSrc.forEach(([img, src]) => {
   img.src = chrome.runtime.getURL(src);
 })
 preventElems.push(selectModeBox);
 preventElems.push(...selectModeBox.querySelectorAll("*"));
+
+
 
 function parseHtmlString(htmlString: string): HTMLElement {
   let parser = new DOMParser();
