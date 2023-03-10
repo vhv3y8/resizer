@@ -1,4 +1,4 @@
-import { applyOptionText } from "./initElements";
+import { applyOptionUI } from "./initElements";
 import { Option } from "./optionMode";
 
 export let option: Option;
@@ -8,11 +8,14 @@ export let option: Option;
   option = db.prevOption as Option;
   console.log("from storage.ts: ", option);
   // set things
-  applyOptionText(option);
+  applyOptionUI(option);
 })();
 
-export function setOption(option?: Option): void {
+export function setOption(givenOption?: Option): void {
+  if (givenOption !== undefined) {
+    option = givenOption;
+  }
   chrome.storage.sync.set({
     prevOption: option
-  })
+  });
 }

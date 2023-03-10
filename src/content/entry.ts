@@ -7,6 +7,7 @@ import { option, setOption } from "./storage";
  *  to run code that gets option from storage
  */
 import "./storage";
+import { optionModeElems } from "./initElements";
 
 Object.values(elements).flat(1).forEach(elem => {
   elem.classList.add("_extension_resizer_none");
@@ -20,6 +21,13 @@ document.addEventListener("keydown", (e) => {
   }
   if (e.key === "Escape") {
     changeModeTo("none");
+
+    let currOption = {
+      fontFamily: (optionModeElems.inputFamily.value === "없음") ? "None" : optionModeElems.inputFamily.value,
+      sizeLimit: +optionModeElems.inputSizeLimit.value,
+      fontSize: +optionModeElems.inputSize.value
+    };
+    setOption(currOption);
   }
 });
 

@@ -16,7 +16,6 @@ export function applyResize(option: Option) {
       // console.log(getComputedStyle(elem).fontSize);
       let prevFontSize = +getComputedStyle(elem).fontSize.slice(0, -2);
       console.log(`prevFontSize is : ${prevFontSize}`);
-      // TODO: repair logic : option.fontSize의 + - 여부에 따라
       if (option.sizeLimit === "None" || (0 <= option.fontSize && prevFontSize < option.sizeLimit) || (option.fontSize < 0 && option.sizeLimit < prevFontSize)) {
         if (0 <= option.fontSize) {
           if (prevFontSize + option.fontSize < option.sizeLimit) {

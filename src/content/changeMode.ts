@@ -1,5 +1,6 @@
-import { selectModeBox } from "./initElements";
+import { applyOptionUI, optionModeElems, optionModeShadow, selectModeShadow } from "./initElements";
 import { selectMouseMove, selectModeEvents, currElement } from "./selectMode";
+import { option, setOption } from "./storage";
 
 export type mode = "none" | "select" | "option";
 export let currMode: mode = "none";
@@ -11,18 +12,24 @@ let events = {
 }
 export const elements: { [m in mode]: HTMLElement[] } = {
   none: [],
-  select: [selectModeBox],
-  option: []
+  select: [selectModeShadow],
+  option: [optionModeShadow]
 }
-// let additionalFunctions: { [m in mode]: Function[] } = {
-//   none: [() => {
-//     if (currElement !== null) {
-//       currElement.classList.remove("_extension_resizer_mouseOver");
-//     }
-//   }],
-//   select: [],
-//   option: []
-// }
+let additionalFunctions: { [m in mode]: Function[] } = {
+  none: [() => {
+    if (currElement !== null) {
+      currElement.classList.remove("_extension_resizer_mouseOver");
+    }
+  }],
+  select: [],
+  option: [() => {
+    // needs to run after element is existing?
+    // set dafault values
+    optionModeElems.inputSize.value = option.fontSize + "";
+    optionModeElems.inputSizeLimit.value = option.sizeLimit + "";
+    optionModeElems.inputSize.select();
+  }]
+}
 
 /**
  *  changes UI and add/remove Events that corresponds to mode.
@@ -42,6 +49,12 @@ export function changeModeTo(mode: mode) {
     hideElements(elements.none);
     hideElements(elements.select);
 
+    applyOptionUI(option);
+
+    additionalFunctions.option.forEach(func => {
+      func();
+    });
+
     document.documentElement.classList.remove("_extension_resizer_rootFilter");
   } else if (mode === "select") {
     // events
@@ -53,6 +66,8 @@ export function changeModeTo(mode: mode) {
     showElements(elements.select);
     hideElements(elements.none);
     hideElements(elements.option);
+
+    applyOptionUI(option);
 
     document.documentElement.classList.add("_extension_resizer_rootFilter");
   } else { // mode === "none"

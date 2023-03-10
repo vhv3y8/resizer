@@ -1,191 +1,180 @@
+import { changeModeTo } from "./changeMode";
+import { optionModeBox, optionModeStyle, selectModeBox, selectModeStyle } from "./elementRaw";
 import "./initFonts";
-import { Option } from "./optionMode";
+import { applyResize, Option } from "./optionMode";
+import { currElement } from "./selectMode";
+import { option, setOption } from "./storage";
 
 export let preventElems: Element[] = [];
 
-export let selectModeBox = parseHtmlString(`<div
-id="_extension_resizer_selectBox"
-style="
-  border-radius: 1rem;
-  background-color: #f2f2f2;
-  border: 3px solid gray;
-  padding: .75em 1.25em 1.5em 1.2em;
-  font-family: Nanum Gothic, sans-serif;
-  font-weight: 800;
-  font-size: 13px;
-  font-synthesis: weight;
-  color: #222;
-  display: inline-block;
-  position: fixed;
-  top: 1em;
-  left: 1em;
-  z-index: 9999;
-"
->
-<h3
-  style="
-    color: #585858;
-    font-family: Lobster, sans-serif;
-    font-size: 19px;
-    margin: 0 0 8px;
-    font-weight: 700;
+export const selectModeShadow = document.createElement("div");
+export const selectModeShadowRoot = selectModeShadow.attachShadow({ mode: "open" });
+selectModeShadowRoot.append(selectModeBox, selectModeStyle);
 
-    display: flex;
-    align-items: center;
-  "
->
-  <img 
-    id="_extension_resizer_img1"
-    style="
-      margin-right: 8px;
-    "
-    src="" alt="" width="22" height="22" color="red"
-  >
-  resizer
-</h3>
-<p
-  style="
-    margin: .4em 0;
+export const optionModeShadow = document.createElement("div");
+export let optionModeShadowRoot = optionModeShadow.attachShadow({ mode: "open" });
+optionModeShadowRoot.append(optionModeBox, optionModeStyle);
 
-    display: flex;
-    align-items: center;
-    font-size: 1em;
-  "
->
-  <img 
-    id="_extension_resizer_img2"
-    style="
-      margin-right: 8px;
-    "
-    src="" width="24" height="24" alt=""
-  >
-  ESC 키를 눌러 종료
-</p>
-<p
-  style="
-    margin: .4em 0;
+console.log(`from initElements.ts: optionModeShadowRoot.querySelector("_extension_resizer_inputSize"):`);
+console.log(optionModeShadowRoot.querySelector("#_extension_resizer_inputSize"));
+console.log(optionModeShadow.shadowRoot?.querySelector("#_extension_resizer_inputSize"));
 
-    display: flex;
-    align-items: center;
-    font-size: 1em;
-  "
->
-  <img 
-    id="_extension_resizer_img3"
-    style="
-      margin-right: 8px;
-    "
-    src="" width="24" height="24" alt=""
-  >
-  추가 선택 및 설정
-</p>
-<p
-  style="
-    margin: .4em 0;
+// scripts for option mode elements
+export const optionModeElems = {
+  inputSize: optionModeShadowRoot.querySelector("#_extension_resizer_inputSize") as HTMLInputElement,
+  inputSizeLimit: optionModeShadowRoot.querySelector("#_extension_resizer_inputSizeLimit") as HTMLInputElement,
+  inputFamily: optionModeShadowRoot.querySelector("#_extension_resizer_inputFamily") as HTMLInputElement
+} as { [name: string]: HTMLInputElement };
+export const selectModeElems = {
+  size: selectModeShadowRoot.querySelector("#_extension_resizer_size"),
+  limit: selectModeShadowRoot.querySelector("#_extension_resizer_sizeLimit"),
+  family: selectModeShadowRoot.querySelector("#_extension_resizer_family")
+} as { [name: string]: HTMLElement };
 
-    display: flex;
-    align-items: center;
-    font-size: 1em;
-  "
->
-  <img 
-    id="_extension_resizer_img4"
-    style="
-      margin-right: 8px;
-    "
-    src="" width="24" height="24" alt=""
-  >
-  즉시 적용
-</p>
-<p
-  id="_extension_resizer_size"
-  style="
-    padding-left: .8em;
-    font-size: 1.1em;
-    margin: 0;
-    font-family: Inconsolata, monospace;
-    line-height: 1.4;
-    background-color: #ccc;
-  "
-></p>
-<p
-  id="_extension_resizer_sizeLimit"
-  style="
-    padding-left: .8em;
-    font-size: 1.1em;
-    margin: 0;
-    font-family: Inconsolata;
-    line-height: 1.4;
-    background-color: #ccc;
-  "
-></p>
-<p
-  id="_extension_resizer_family"
-  style="
-    padding-left: .8em;
-    font-size: 1.1em;
-    margin: 0;
-    font-family: Inconsolata, monospace;
-    line-height: 1.4;
-    background-color: #ccc;
-  "
-></p>
-</div>`);
-let [img1, img2, img3, img4]: HTMLImageElement[] = [
-  selectModeBox.querySelector("#_extension_resizer_img1") as HTMLImageElement,
-  selectModeBox.querySelector("#_extension_resizer_img2") as HTMLImageElement,
-  selectModeBox.querySelector("#_extension_resizer_img3") as HTMLImageElement,
-  selectModeBox.querySelector("#_extension_resizer_img4") as HTMLImageElement
+let inputTexts = [optionModeElems.inputSize, optionModeElems.inputSizeLimit];
+console.log([optionModeElems.inputSize, optionModeElems.inputSizeLimit, optionModeElems.inputFamily]);
+console.log(inputTexts);
+inputTexts.forEach((elem: HTMLInputElement) => {
+  elem.addEventListener("mousedown", (e) => {
+    elem.select();
+    console.log("mousedown");
+  })
+  elem.addEventListener("mouseup", (e) => {
+    // elem.select();
+    // console.log("mouseup");
+    e.preventDefault();
+  })
+});
+// elem.addEventListener("input", (e) => {
+//   // validation
+//   let validCharacters = "0123456789+-".split("");
+//   if (!validCharacters.includes(elem.value[elem.value.length - 1])) {
+//     elem.value = elem.value.split("").slice(0, -1).join("");
+//   }
+// })
+// TODO : value for optionModeElems.inputFamily
+let optionInputSizeValue = optionModeElems.inputSize.value;
+optionModeElems.inputSize.addEventListener("input", (e) => {
+  console.log("from input input event: ", optionModeElems.inputSize.value);
+  let regex = /^-?\d*\.?\d*$/;
+  if (!optionModeElems.inputSize.value.match(regex)) {
+    optionModeElems.inputSize.value = optionInputSizeValue;
+  } else {
+    optionInputSizeValue = optionModeElems.inputSize.value;
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  let currActive = optionModeShadowRoot.activeElement;
+  console.log(e.key);
+  console.log(currActive);
+  if (e.key === "ArrowDown" || e.key === "ArrowLeft") {
+    e.preventDefault();
+    if (currActive === optionModeElems.inputSize) {
+      (currActive as HTMLInputElement).value = +(currActive as HTMLInputElement).value - 1 + "";
+      buttonPlusMinus.textContent = (+(currActive as HTMLInputElement).value < 0) ? "-" : "+";
+    } else if (currActive === optionModeElems.inputSizeLimit) {
+      (currActive as HTMLInputElement).value = +(currActive as HTMLInputElement).value - 1 + "";
+    }
+
+    if (currActive instanceof HTMLInputElement) {
+      currActive.select();
+    }
+  } else if (e.key === "ArrowUp" || e.key === "ArrowRight") {
+    e.preventDefault();
+    if (currActive === optionModeElems.inputSize) {
+      (currActive as HTMLInputElement).value = +(currActive as HTMLInputElement).value + 1 + "";
+      buttonPlusMinus.textContent = (+(currActive as HTMLInputElement).value < 0) ? "-" : "+";
+    } else if (currActive === optionModeElems.inputSizeLimit) {
+      (currActive as HTMLInputElement).value = +(currActive as HTMLInputElement).value + 1 + "";
+    }
+
+    if (currActive instanceof HTMLInputElement) {
+      currActive.select();
+    }
+  }
+
+  if (e.key === "Enter") {
+    applyButton.click();
+  }
+});
+
+const buttonPlusMinus = optionModeShadowRoot.querySelector("#_extension_resizer_buttonPlusMinus") as HTMLButtonElement;
+buttonPlusMinus.addEventListener("click", () => {
+  optionModeElems.inputSize.value = +optionModeElems.inputSize.value * -1 + "";
+  buttonPlusMinus.textContent = (buttonPlusMinus.textContent === "+") ? "-" : "+";
+});
+
+let applyButton = optionModeShadowRoot.querySelector("#apply") as HTMLButtonElement;
+applyButton.addEventListener("click", () => {
+  let currOption = {
+    fontFamily: (optionModeElems.inputFamily.value === "없음") ? "None" : optionModeElems.inputFamily.value,
+    sizeLimit: +optionModeElems.inputSizeLimit.value,
+    fontSize: +optionModeElems.inputSize.value
+  };
+  applyResize(currOption);
+  changeModeTo("none");
+  setOption(currOption);
+  console.log(`option is :`, currOption);
+});
+
+// set image srcs
+let [img1, img2, img3, img4, img5]: HTMLImageElement[] = [
+  selectModeShadowRoot.querySelector("#_extension_resizer_img1") as HTMLImageElement,
+  selectModeShadowRoot.querySelector("#_extension_resizer_img2") as HTMLImageElement,
+  selectModeShadowRoot.querySelector("#_extension_resizer_img3") as HTMLImageElement,
+  selectModeShadowRoot.querySelector("#_extension_resizer_img4") as HTMLImageElement,
+  optionModeShadowRoot.querySelector("#_extension_resizer_img5") as HTMLImageElement
 ];
 let imgToSrc: [HTMLImageElement, string][] = [
   [img1, "assets/resizerIconTransparent.png"],
   [img2, "assets/escBig.png"],
   [img3, "assets/leftMouse.png"],
-  [img4, "assets/rightMouse.png"]
+  [img4, "assets/rightMouse.png"],
+  [img5, "assets/resizerIconTransparent.png"]
 ];
-
-export function applyOptionText(option: Option) {
-  let size = document.getElementById("_extension_resizer_size") as HTMLElement;
-  let limit = document.getElementById("_extension_resizer_sizeLimit") as HTMLElement;
-  let family = document.getElementById("_extension_resizer_family") as HTMLElement;
-
-  size.classList.remove("._extension_resizer_none");
-  limit.classList.remove("._extension_resizer_none");
-  family.classList.remove("._extension_resizer_none");
-
-  size.textContent = "font-size: ";
-  if (option.fontSize === 0) {
-    size.textContent += "0";
-  } else if (option.fontSize < 0) {
-    size.textContent += option.fontSize;
-  } else {
-    size.textContent += "+" + option.fontSize;
-  }
-  size.textContent += "px;";
-
-  if (option.sizeLimit === "None") {
-    console.log("sizeLimit is None.");
-    limit.classList.add("._extension_resizer_none");
-  } else {
-    limit.textContent = `font-size limit: ${option.sizeLimit}px`;
-  }
-
-  if (option.fontFamily === "None") {
-    console.log("fontFamily is None.");
-    family.classList.add("._extension_resizer_none");
-  } else {
-    family.textContent = `font-family: ${option.fontFamily}`;
-  }
-}
 imgToSrc.forEach(([img, src]) => {
   img.src = chrome.runtime.getURL(src);
 })
 preventElems.push(selectModeBox);
 preventElems.push(...selectModeBox.querySelectorAll("*"));
 
+export function applyOptionUI(option: Option) {
+  console.log(option);
+  optionModeElems.inputSize.value = option.fontSize + "";
+  optionModeElems.inputSizeLimit.value = option.sizeLimit + "";
+  console.log(`from applyOptionUI: `, optionModeElems.inputSize.value, optionModeElems.inputSizeLimit.value);
+  console.log(option);
 
+  // Set Select Mode UI.
+  selectModeElems.size.classList.remove("._extension_resizer_none");
+  selectModeElems.limit.classList.remove("._extension_resizer_none");
+  selectModeElems.family.classList.remove("._extension_resizer_none");
 
-function parseHtmlString(htmlString: string): HTMLElement {
-  let parser = new DOMParser();
-  return parser.parseFromString(htmlString, "text/html").body.firstChild as HTMLElement;
+  selectModeElems.size.textContent = "font-size: ";
+  if (option.fontSize === 0) {
+    selectModeElems.size.textContent += "0";
+  } else if (option.fontSize < 0) {
+    selectModeElems.size.textContent += option.fontSize;
+  } else {
+    selectModeElems.size.textContent += "+" + option.fontSize;
+  }
+  selectModeElems.size.textContent += "px;";
+
+  if (option.sizeLimit === "None") {
+    console.log("sizeLimit is None.");
+    selectModeElems.limit.classList.add("._extension_resizer_none");
+  } else {
+    selectModeElems.limit.textContent = `font-size limit: ${option.sizeLimit}px`;
+  }
+
+  if (option.fontFamily === "None") {
+    console.log("fontFamily is None.");
+    selectModeElems.family.classList.add("._extension_resizer_none");
+  } else {
+    selectModeElems.family.textContent = `font-family: ${option.fontFamily}`;
+  }
 }
+
+
+
